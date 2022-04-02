@@ -19,8 +19,8 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import Level from 'App/Models/Level'
-import axios from 'axios'
+// import Level from 'App/Models/Level'
+// import axios from 'axios'
 
 Route.get('/', async ({auth}) => {
   if(auth.user){
@@ -32,101 +32,123 @@ Route.get('/', async ({auth}) => {
 
 Route.get('register','AuthController.registerShow')
 Route.get('login','AuthController.loginShow')
-
+/**
+ * User Authentication Route
+ */
 Route.post('register','AuthController.register')
 Route.post('login','AuthController.login')
 Route.get('logout','AuthController.logout')
+Route.get('user_auth','AuthController.userAuth')
+
+/**
+ * Level's Route
+ */
+Route.get('level','LevelsController.index')
+Route.get('level/:level_name/questions','QuestionsController.index')
+Route.post('level/:level_name/questions','QuestionsController.store')
 
 
-Route.get('createlevel',async({response})=>{
-  const url = 'https://opentdb.com/api.php?amount=100'
-  let responseResult;
-  try {
-    const response = await axios.get(url);
-    // console.log(response.data.results);
-    responseResult = response.data.results;
-  } catch (error) {
-    console.log(error);
-  }
-  /**
-   * ResponseResult is array of object 
-   */
-  responseResult.forEach(async (questionDetails) => {
-      try {
-        /**
-         * If Level is exist then skip or create
-         */
-        const level = await Level.firstOrCreate({ name:questionDetails.difficulty},{ name:questionDetails.difficulty})
+/**
+ * User Result for specific Level 
+ */
+// Route.get('level/:level_name/:user_id/results','ResultsController.index')
 
-        /**
-         * Using level model instance insert each  question in 'questions' DB
-         */
-        const question = await level.related('questions').firstOrCreate(
-          { title:questionDetails.question},
-          { title:questionDetails.question}
-        )
+/**
+ * User Information Route
+ */
+Route.get('/user/:username','UsersController.index') // Retrun User's all information
+Route.get('/user/:user_id/results/level/:level_name','UsersController.levelResults') // Return User's result by level 
+Route.get('/user/:user_id/choice/level/:level_name','UsersController.levelChoices') // Return User's choices by level
 
-        /**
-         * Making Options Array to store options for each single question
-         */
-        const finalOptions = questionDetails.incorrect_answers.map((value)=>{
-          const incorrectOption = {};
-          incorrectOption['title'] = value;
-          incorrectOption['isAns'] = false;
-          return incorrectOption;
-        });
-        /**
-         * Correct Ans push in finalOption Array
-         */
-        const correctOption = {
-          title: questionDetails.correct_answer,
-          isAns: true,
-        }
-        finalOptions.push(correctOption);
-        // console.log(finalOptions);
-        await question.related('options').createMany(finalOptions);
-      } catch (error) {
-        console.log(error);
-        return response.json({
-          msg: 'OOP! -> Something is wrong !!'
-        });
-      }
-  });
-  // try {
-  //   const data = {
-  //     'name': 'Easy'
-  //   }
-  //   const level = await Level.create(data);
-  //   const question = await level.related('questions').create({
-  //     title:'fresh',
-  //   })
+// Route.get('createlevel',async({response})=>{
+//   const url = 'https://opentdb.com/api.php?amount=100'
+//   let responseResult;
+//   try {
+//     const response = await axios.get(url);
+//     // console.log(response.data.results);
+//     responseResult = response.data.results;
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   /**
+//    * ResponseResult is array of object 
+//    */
+//   responseResult.forEach(async (questionDetails) => {
+//       try {
+//         /**
+//          * If Level is exist then skip or create
+//          */
+//         const level = await Level.firstOrCreate({ name:questionDetails.difficulty},{ name:questionDetails.difficulty})
+
+//         /**
+//          * Using level model instance insert each  question in 'questions' DB
+//          */
+//         const question = await level.related('questions').firstOrCreate(
+//           { title:questionDetails.question},
+//           { title:questionDetails.question}
+//         )
+
+//         /**
+//          * Making Options Array to store options for each single question
+//          */
+//         const finalOptions = questionDetails.incorrect_answers.map((value)=>{
+//           const incorrectOption = {};
+//           incorrectOption['title'] = value;
+//           incorrectOption['isAns'] = false;
+//           return incorrectOption;
+//         });
+//         /**
+//          * Correct Ans push in finalOption Array
+//          */
+//         const correctOption = {
+//           title: questionDetails.correct_answer,
+//           isAns: true,
+//         }
+//         finalOptions.push(correctOption);
+//         // console.log(finalOptions);
+//         await question.related('options').createMany(finalOptions);
+//       } catch (error) {
+//         console.log(error);
+//         return response.json({
+//           msg: 'OOP! -> Something is wrong !!'
+//         });
+//       }
+//   });
+//   // try {
+//   //   const data = {
+//   //     'name': 'Easy'
+//   //   }
+//   //   const level = await Level.create(data);
+//   //   const question = await level.related('questions').create({
+//   //     title:'fresh',
+//   //   })
   
   
-  //   await question.related('options').createMany([
-  //     {
-  //       title:'is it Alco?',
-  //       isAns: false,
-  //     },
-  //     {
-  //       title:'it it Drink?',
-  //       isAns:false,
-  //     },
-  //     {
-  //       title:'is iT water?',
-  //       isAns: true,
-  //     },
-  //     {
-  //       title:'is it Oil?',
-  //       isAns: false,
-  //     }
-  //   ])
-  // } catch (error) {
-  //   console.log(error);
-  //   return response.json({
-  //     msg:"Something Going Wrong !!"
-  //   })
-  // }
-  return response.json({
-    results: responseResult
-  });
-})
+//   //   await question.related('options').createMany([
+//   //     {
+//   //       title:'is it Alco?',
+//   //       isAns: false,
+//   //     },
+//   //     {
+//   //       title:'it it Drink?',
+//   //       isAns:false,
+//   //     },
+//   //     {
+//   //       title:'is iT water?',
+//   //       isAns: true,
+//   //     },
+//   //     {
+//   //       title:'is it Oil?',
+//   //       isAns: false,
+//   //     }
+//   //   ])
+//   // } catch (error) {
+//   //   console.log(error);
+//   //   return response.json({
+//   //     msg:"Something Going Wrong !!"
+//   //   })
+//   // }
+//   return response.json({
+//     results: responseResult
+//   });
+// })

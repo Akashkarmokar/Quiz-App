@@ -3,6 +3,7 @@ import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Level from './Level'
 import Question from './Question'
+import Option from './Option'
 
 export default class UserResult extends BaseModel {
   /**
@@ -21,7 +22,7 @@ export default class UserResult extends BaseModel {
   public questionId: number
 
   @column()
-  public isCorrect: boolean
+  public optionId: number
 
   
   @column.dateTime({ autoCreate: true })
@@ -35,7 +36,7 @@ export default class UserResult extends BaseModel {
    */
   // One to Many relationship with 'User' model as child table of 'User' model
   @belongsTo(()=>User,{
-    localKey:'userId'
+    localKey:'id'
   })
   public user: BelongsTo<typeof User>
 
@@ -53,8 +54,12 @@ export default class UserResult extends BaseModel {
    * This model used as child table of 'questions' DB
    */
   @belongsTo(()=>Question,{
-    localKey:'questionId'
+    localKey:'id'
   })
   public question: BelongsTo<typeof Question>
 
+  @belongsTo(()=>Option,{
+    localKey:'id'
+  })
+  public option: BelongsTo<typeof Option>
 }

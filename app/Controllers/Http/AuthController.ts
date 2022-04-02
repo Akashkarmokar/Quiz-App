@@ -27,7 +27,9 @@ export default class AuthController {
 
         await auth.login(user);
         
-        return response.redirect().toRoute('/');
+        return response.json({
+            user
+        });
     }
 
     public async loginShow({response}:HttpContextContract){
@@ -48,12 +50,15 @@ export default class AuthController {
             session.flash('form','Your username, email, or password is incorrect')
             return response.redirect('/');
         }
-        return response.redirect('/');
+        // return response.redirect('/');
+        return response.json(auth.user);
     }
 
     public async logout({response,auth}:HttpContextContract){
         await auth.logout();
         return response.redirect('/')
-
+    }
+    public async userAuth({auth,response}:HttpContextContract){
+        return response.json(auth);
     }
 }

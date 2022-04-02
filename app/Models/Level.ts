@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany, HasManyThrough, hasManyThrough } from '@ioc:Adonis/Lucid/Orm'
 import Question from './Question'
 import UserResult from './UserResult'
+import Option from './Option'
 
 export default class Level extends BaseModel {
   /**

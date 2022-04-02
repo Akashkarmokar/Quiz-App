@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Question from './Question'
+import UserResult from './UserResult'
 
 export default class Option extends BaseModel {
   @column({ isPrimary: true })
@@ -30,4 +31,8 @@ export default class Option extends BaseModel {
   })
   public question: BelongsTo<typeof Question>
   
+  @hasMany(()=>UserResult,{
+    foreignKey:'optionId'
+  })
+  public userResult: HasMany<typeof UserResult>
 }
