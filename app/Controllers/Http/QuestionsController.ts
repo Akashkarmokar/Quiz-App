@@ -5,7 +5,8 @@ import UserResult from 'App/Models/UserResult'
 import { schema,rules } from '@ioc:Adonis/Core/Validator'
 
 export default class QuestionsController {
-    public async index({response,params}:HttpContextContract){
+    public async index({response,params,auth}:HttpContextContract){
+        console.log(auth.user);
         const levelName = params.level_name;
         // const level = await Level.query().where('name',levelName).preload('questions').preload('options');
         const levelId = await Level.query().where('name',levelName);
@@ -37,7 +38,7 @@ export default class QuestionsController {
         });
 
         const validateData = await request.validate({schema:dataSchema});
-        // console.log(validateData);
+        console.log(validateData);
         // return response.json({msg:'Hello'});
         const userId = validateData.data[0].userId;
         const levelId = validateData.data[0].levelId;

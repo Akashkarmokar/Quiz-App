@@ -35,23 +35,26 @@ Route.get('login','AuthController.loginShow')
 /**
  * User Authentication Route
  */
-Route.post('register','AuthController.register')
-Route.post('login','AuthController.login')
-Route.get('logout','AuthController.logout')
-Route.get('user_auth','AuthController.userAuth')
+Route.post('register','AuthController.register').middleware(['guest'])
+Route.post('login','AuthController.login').middleware(['guest'])
+Route.get('logout','AuthController.logout').middleware(['auth'])
+Route.get('user_auth','AuthController.userAuth').middleware(['auth'])
 
 /**
  * Level's Route
  */
-Route.get('level','LevelsController.index')
-Route.get('level/:level_name/questions','QuestionsController.index')
-Route.post('level/:level_name/questions','QuestionsController.store')
+Route.get('level','LevelsController.index').middleware(['auth'])
+Route.get('level/:level_name/questions','QuestionsController.index').middleware(['auth'])
+Route.post('level/:level_name/questions','QuestionsController.store').middleware(['auth'])
 
 
 /**
  * User Result for specific Level 
  */
 // Route.get('level/:level_name/:user_id/results','ResultsController.index')
+
+
+// TODO: User Information route authentication required
 
 /**
  * User Information Route

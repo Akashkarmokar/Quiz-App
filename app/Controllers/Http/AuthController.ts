@@ -56,9 +56,12 @@ export default class AuthController {
 
     public async logout({response,auth}:HttpContextContract){
         await auth.logout();
-        return response.redirect('/')
+        return response.json({
+            msg:"User is log out successfully !!"
+        })
     }
     public async userAuth({auth,response}:HttpContextContract){
-        return response.json(auth);
+        // console.log(auth.user);
+        return response.json(auth.isLoggedIn?auth.user:false);
     }
 }
