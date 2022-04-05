@@ -60,9 +60,12 @@ Route.post('level/:level_name/questions','QuestionsController.store').middleware
  * User Information Route
  */
 Route.get('/user/:username','UsersController.index') // Retrun User's all information
-Route.get('/user/:user_id/results/level/:level_name','UsersController.levelResults') // Return User's result by level 
-Route.get('/user/:user_id/choice/level/:level_name','UsersController.levelChoices') // Return User's choices by level
+// Route.get('/user/:user_id/results/level/:level_name','UsersController.levelResults').middleware(['auth']) // Return User's result by level 
+// Route.get('/user/:user_id/choice/level/:level_name','UsersController.levelChoices').middleware(['auth']) // Return User's choices by level
 
+
+Route.post('/user/results/level','UsersController.levelResults').middleware(['auth'])
+Route.post('/user/choice/level','UsersController.levelChoices').middleware(['auth'])
 // Route.get('createlevel',async({response})=>{
 //   const url = 'https://opentdb.com/api.php?amount=100'
 //   let responseResult;

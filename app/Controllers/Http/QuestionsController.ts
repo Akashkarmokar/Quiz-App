@@ -2,11 +2,11 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Level from 'App/Models/Level'
 import Question from 'App/Models/Question'
 import UserResult from 'App/Models/UserResult'
-import { schema,rules } from '@ioc:Adonis/Core/Validator'
+import { schema } from '@ioc:Adonis/Core/Validator'
 
 export default class QuestionsController {
-    public async index({response,params,auth}:HttpContextContract){
-        console.log(auth.user);
+    public async index({response,params}:HttpContextContract){
+        // console.log(auth.user);
         const levelName = params.level_name;
         // const level = await Level.query().where('name',levelName).preload('questions').preload('options');
         const levelId = await Level.query().where('name',levelName);
@@ -18,7 +18,7 @@ export default class QuestionsController {
         return response.json({questions});
         // return response.json({msg: "HELLO"});
     }
-    public async store({request,response,auth}:HttpContextContract){
+    public async store({request,response}:HttpContextContract){
         // if(auth.user){
         //     return response.json({msg: 'User Log in'});
         // }

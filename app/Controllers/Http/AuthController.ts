@@ -20,9 +20,14 @@ export default class AuthController {
             ]),
             password:schema.string({},[rules.minLength(8)])
         });
-
-        const validateData = await request.validate({schema: userSchema});
-
+        let validateData;
+        try {
+            validateData = await request.validate({schema: userSchema});
+        } catch (error) {
+            response.status(401);
+            return response.json({error:error.responseText});
+        }
+        
         const user = await User.create(validateData);
 
         await auth.login(user);
@@ -43,14 +48,16 @@ export default class AuthController {
         });
 
         const validateData = await request.validate({schema:userLoginSchema});
-
+        
         try {
             await auth.attempt(validateData.uid, validateData.password);
         } catch (error) {
-            session.flash('form','Your username, email, or password is incorrect')
-            return response.redirect('/');
+            // session.flash('form','Your username, email, or password is incorrect')
+            // console.log(error.responseText);
+            // return response.redirect('/');
+            response.status(401);
+            return response.json({error:error.responseText});
         }
-        // return response.redirect('/');
         return response.json(auth.user);
     }
 
